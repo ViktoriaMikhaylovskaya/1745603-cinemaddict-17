@@ -2,7 +2,7 @@ import {createElement} from '../render.js';
 
 const createNewStatisticsTemplate = () => '<p>130 291 movies inside</p>';
 
-export default class NewStatisticsView {
+export default class StatisticsView {
   getTemplate() {
     return createNewStatisticsTemplate();
   }

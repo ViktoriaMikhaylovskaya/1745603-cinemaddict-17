@@ -1,10 +1,10 @@
 import {createElement} from '../render.js';
 
-const createNewListFilterTemplate = () => '<ul class="sort"><li><a href="#" class="sort__button sort__button--active">Sort by default</a></li><li><a href="#" class="sort__button">Sort by date</a></li><li><a href="#" class="sort__button">Sort by rating</a></li></ul>';
+const createNewFilterTemplate = () => '<ul class="sort"><li><a href="#" class="sort__button sort__button--active">Sort by default</a></li><li><a href="#" class="sort__button">Sort by date</a></li><li><a href="#" class="sort__button">Sort by rating</a></li></ul>';
 
-export default class NewListFilterView {
+export default class FilterView {
   getTemplate() {
-    return createNewListFilterTemplate();
+    return createNewFilterTemplate();
   }
 
   getElement() {

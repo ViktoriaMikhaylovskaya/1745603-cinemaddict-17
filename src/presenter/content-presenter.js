@@ -1,26 +1,23 @@
-import NewMovieListView from '../view/movie-list-view';
-import NewButtonShowMoreView from '../view/button-show-more-view.js';
-import NewFilmListExtraView from '../view/top-films-list-view';
-import NewTopCommentedFilmsView from '../view/most-commented-films-view';
-import NewStatisticsView from '../view/statistics-view';
-import NewPopupMovieDetailsView from '../view/popup-movie-details-view';
+import MovieListView from '../view/movie-list-view';
+import ButtonShowMoreView from '../view/button-show-more-view.js';
+import TopFilmsView from '../view/top-films-list-view';
+import MostCommentedFilmsView from '../view/most-commented-films-view';
+import PopupView from '../view/popup-movie-details-view';
 import {render} from '../render.js';
 
-const siteBodyElement = document.querySelector('body');
-const siteMainElement = document.querySelector('.main');
-const getFilmSection = () => siteMainElement.querySelector('.films');
+const siteBodyNode = document.querySelector('body');
+const siteMainNode = document.querySelector('.main');
+const getFilmSection = () => siteMainNode.querySelector('.films');
 const getFilmList = () => getFilmSection().querySelector('.films-list');
-const siteFooterElement = document.querySelector('.footer__statistics');
 
 
 export default class ContentPresenter {
 
   init = () => {
-    render(new NewMovieListView(), siteMainElement);
-    render(new NewButtonShowMoreView(), getFilmList());
-    render(new NewFilmListExtraView(), getFilmSection());
-    render(new NewTopCommentedFilmsView(), getFilmSection());
-    render(new NewStatisticsView(), siteFooterElement);
-    render(new NewPopupMovieDetailsView(), siteBodyElement);
+    render(new MovieListView(), siteMainNode);
+    render(new ButtonShowMoreView(), getFilmList());
+    render(new TopFilmsView(), getFilmSection());
+    render(new MostCommentedFilmsView(), getFilmSection());
+    render(new PopupView(), siteBodyNode);
   };
 }

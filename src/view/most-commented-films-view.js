@@ -48,7 +48,7 @@ const createNewTopCommentedFilmsTemplate = () => (
   </section>`
 );
 
-export default class NewTopCommentedFilmsView {
+export default class MostCommentedFilmsView {
   getTemplate() {
     return createNewTopCommentedFilmsTemplate();
   }

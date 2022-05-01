@@ -9,7 +9,7 @@ const createNavigationTemplate = () => (
   </nav>`
 );
 
-export default class NewNavigationView {
+export default class NavigationView {
   getTemplate() {
     return createNavigationTemplate();
   }
