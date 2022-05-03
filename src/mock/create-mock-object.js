@@ -9,7 +9,7 @@ export const createMockObject = () => ({
     title: getRandomItem(title),
     alternativeTitle: getRandomItem(alternativeTitle),
     totalRating: getRandomValue(0.1, 10, 1),
-    poster: `images/posters/${getRandomItem(poster)}`,
+    poster: getRandomItem(poster),
     ageRating: getRandomNumber(1888, 2022),
     director: getRandomItem(director),
     writers: getRandomItem(writers),
