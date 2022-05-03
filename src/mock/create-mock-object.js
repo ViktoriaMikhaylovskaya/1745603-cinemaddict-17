@@ -20,7 +20,7 @@ export const createMockObject = () => ({
       releaseCountry: getRandomItem(releaseCountry)
     },
     runtime: getTimeFromMins(runtime),
-    genre: getRandomArray(genre),
+    genre: getRandomItem(genre),
     description: getRandomItem(description)
   },
   // userDetails: {

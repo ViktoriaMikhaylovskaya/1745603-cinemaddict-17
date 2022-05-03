@@ -4,7 +4,7 @@ import {createElement} from '../render.js';
 
 const createFilmCard = (movie) => {
   const {title, genre, description, ageRating, totalRating, poster, runtime} = movie.filmInfo;
-  // console.log(poster);
+
   return (
     `<article class="film-card">
       <a class="film-card__link">

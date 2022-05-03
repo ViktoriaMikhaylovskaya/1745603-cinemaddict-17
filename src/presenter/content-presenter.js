@@ -21,15 +21,29 @@ export default class ContentPresenter {
     render(new MovieListView(this.newMovies), siteMainNode);
     const getFilmCard = () => getFilmList().querySelector('.films-list__container');
 
-    // Добавляет фильмы в список
+    // Добавит фильмы в список
     this.newMovies.forEach((el) => {
       render(new MovieCardView(el), getFilmCard());
     });
 
+    // Добавит кнопку в конце списка фильмов
     render(new ButtonShowMoreView(), getFilmList());
-    render(new TopFilmsView(), siteMainNode);
-    render(new MostCommentedFilmsView(), siteMainNode);
-    // console.log(siteMainNode);
+
+    // Добавит популярные фильмы
+    render(new TopFilmsView(), getFilmSection());
+    const topFilmsNode = document.querySelector('.films-list__container--top-films');
+
+    for (let i = 0; i < 2; i++) {
+      render(new MovieCardView(this.newMovies[i]), topFilmsNode);
+    }
+
+    // Добавит наиблее комментируемые фильмы
+    render(new MostCommentedFilmsView(), getFilmSection());
+    const mostCommentedFilmsNode = document.querySelector('.films-list__container--most-commented');
+
+    for (let i = 2; i < 4; i++) {
+      render(new MovieCardView(this.newMovies[i]), mostCommentedFilmsNode);
+    }
 
     // Попап с подробной инф-ей о фильме
     this.newMovies.forEach((el) => {
