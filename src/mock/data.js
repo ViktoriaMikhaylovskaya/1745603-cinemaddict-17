@@ -13,8 +13,9 @@ const description = [
 ];
 const poster = ['made-for-each-other.png', 'popeye-meets-sinbad.png', 'sagebrush-trail.jpg', 'the-dance-of-life.jpg'];
 const runtime = 78;
+const ageRating = ['0', '12+', '18+'];
 
-// const ageRating 0 - ...
 // date: '2019-05-11T00:00:00.000Z', - 30 March 1945
 
-export {title, alternativeTitle, director, writers, actors, releaseCountry, genre, description, poster, runtime};
+
+export {title, alternativeTitle, director, writers, actors, releaseCountry, genre, description, poster, runtime, ageRating};

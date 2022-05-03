@@ -4,6 +4,20 @@ export function getRandomItem(arr) {
   return arr[getRandomNumber(0, arr.length - 1)];
 }
 
+// Создание массива с рандомным количеством элементов
+
+export function getRandomArray(array) {
+  const arrayNew = new Array(getRandomNumber(1, array.length)).fill(' ');
+
+  arrayNew.forEach((element, index) => {
+    const ranItem = getRandomItem(array);
+
+    arrayNew[index] = ranItem;
+  });
+
+  return [...new Set(arrayNew)];
+}
+
 // Получение рандомного числа
 
 export function getRandomNumber (minValue, maxValue) {
@@ -35,3 +49,11 @@ export function getTimeFromMins(mins) {
   }
   return `${mins}m`;
 }
+
+// Переведет дату в нужный вид
+
+// const humanizeFilmDueDate = (dueDate) => dayjs(dueDate).format('D MMMM');
+
+
+// const date = '2019-05-11T00:00:00.000Z';
+// console.log(humanizeFilmDueDate(date));

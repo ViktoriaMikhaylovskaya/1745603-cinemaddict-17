@@ -1,7 +1,6 @@
-import {title, alternativeTitle, director, writers, actors, releaseCountry, genre, description, poster, runtime} from './data.js';
-import {getRandomItem, getRandomNumber, getRandomValue, getTimeFromMins} from '../util.js';
+import {title, alternativeTitle, director, writers, actors, releaseCountry, genre, description, poster, runtime, ageRating} from './data.js';
+import {getRandomItem, getRandomNumber, getRandomValue, getTimeFromMins, getRandomArray} from '../util.js';
 
-// console.log(getTimeFromMins(runtime));
 // Создание объекта с информацией о фильме
 
 export const createMockObject = () => ({
@@ -12,15 +11,16 @@ export const createMockObject = () => ({
     poster: getRandomItem(poster),
     ageRating: getRandomNumber(1888, 2022),
     director: getRandomItem(director),
-    writers: getRandomItem(writers),
-    actors: getRandomItem(actors),
+    writers: getRandomArray(writers),
+    actors: getRandomArray(actors),
+    age: getRandomItem(ageRating),
 
     release: {
       // date: '2019-05-11T00:00:00.000Z',
       releaseCountry: getRandomItem(releaseCountry)
     },
     runtime: getTimeFromMins(runtime),
-    genre: getRandomItem(genre),
+    genre: getRandomArray(genre),
     description: getRandomItem(description)
   },
   // userDetails: {
@@ -30,6 +30,8 @@ export const createMockObject = () => ({
   //   favorite: false
   // }
 });
+
+// console.log(createMockObject(1));
 
 
 // Создание массива с нужным количеством объектов
