@@ -1,4 +1,5 @@
-const EMOTION = ['smil', 'sleeping', 'puke', 'angry'];
+const EMOTIONS = ['smil', 'sleeping', 'puke', 'angry'];
+const dateComment = '2019-05-16T00:00:00.000Z';
 const title = ['The Great Flamarion', 'The Dance of Life', 'Sagebrush Trail', 'The Man with the Golden Arm'];
 const alternativeTitle = ['The Great Flamarion', 'Быстрее ветра', 'Побеждают хитрые', 'Что-то с чем-то'];
 const director = ['Anthony Mann', 'Tom Ford'];
@@ -17,4 +18,4 @@ const runtime = 78;
 const ageRating = ['0', '12+', '18+'];
 
 
-export {EMOTION, title, alternativeTitle, director, writers, actors, releaseCountry, genre, description, poster, runtime, ageRating};
+export {EMOTIONS, dateComment, title, alternativeTitle, director, writers, actors, releaseCountry, genre, description, poster, runtime, ageRating};
