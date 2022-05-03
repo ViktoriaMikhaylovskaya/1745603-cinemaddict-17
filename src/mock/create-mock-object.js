@@ -1,7 +1,7 @@
-import {title, alternativeTitle, director, writers, actors, releaseCountry, genre, description, poster} from './data.js';
-import {getRandomItem, getRandomNumber, getRandomValue} from '../util.js';
+import {title, alternativeTitle, director, writers, actors, releaseCountry, genre, description, poster, runtime} from './data.js';
+import {getRandomItem, getRandomNumber, getRandomValue, getTimeFromMins} from '../util.js';
 
-
+// console.log(getTimeFromMins(runtime));
 // Создание объекта с информацией о фильме
 
 export const createMockObject = () => ({
@@ -19,7 +19,7 @@ export const createMockObject = () => ({
       // date: '2019-05-11T00:00:00.000Z',
       releaseCountry: getRandomItem(releaseCountry)
     },
-    runtime: 77,
+    runtime: getTimeFromMins(runtime),
     genre: getRandomItem(genre),
     description: getRandomItem(description)
   },
@@ -43,4 +43,3 @@ export function createMockArray(amount) {
 
   return array;
 }
-// console.log(createMockArray(10));

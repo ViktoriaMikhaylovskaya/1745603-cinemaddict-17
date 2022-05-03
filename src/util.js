@@ -24,4 +24,14 @@ export function getRandomValue (minValue, maxValue, range) {
   return Number(rundomNumber.toFixed(range));
 }
 
-// console.log('sdkfslkflsk');
+// Конвертирует минуты в часы
+
+export function getTimeFromMins(mins) {
+  const hours = Math.trunc(mins/60);
+  const minutes = mins % 60;
+
+  if(hours) {
+    return `${hours}h ${minutes}m`;
+  }
+  return `${mins}m`;
+}

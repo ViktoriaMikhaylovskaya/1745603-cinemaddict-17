@@ -12,10 +12,9 @@ const description = [
   'Aliquam id orci ut lectus varius viverra.'
 ];
 const poster = ['made-for-each-other.png', 'popeye-meets-sinbad.png', 'sagebrush-trail.jpg', 'the-dance-of-life.jpg'];
+const runtime = 78;
 
-// const totalRating  = ['8.3', '5.6', '9.1', '7.8']; - рейтинг фильма от 0 до 10
 // const ageRating 0 - ...
 // date: '2019-05-11T00:00:00.000Z', - 30 March 1945
-// const runtime - длительность фильма 1h 18m - минуты перевести в часы
 
-export {title, alternativeTitle, director, writers, actors, releaseCountry, genre, description, poster};
+export {title, alternativeTitle, director, writers, actors, releaseCountry, genre, description, poster, runtime};

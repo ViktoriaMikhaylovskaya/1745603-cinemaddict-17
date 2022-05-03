@@ -3,7 +3,7 @@ import {createElement} from '../render.js';
 // Создание одной карточки фильма
 
 const createFilmCard = (movie) => {
-  const {title, genre, description, ageRating, totalRating, poster} = movie.filmInfo;
+  const {title, genre, description, ageRating, totalRating, poster, runtime} = movie.filmInfo;
   // console.log(poster);
   return (
     `<article class="film-card">
@@ -12,7 +12,7 @@ const createFilmCard = (movie) => {
         <p class="film-card__rating">${totalRating}</p>
         <p class="film-card__info">
           <span class="film-card__year">${ageRating}</span>
-          <span class="film-card__duration">1h 55m</span>
+          <span class="film-card__duration">${runtime}</span>
           <span class="film-card__genre">${genre}</span>
         </p>
         <img src="./images/posters/${poster}" alt="" class="film-card__poster">

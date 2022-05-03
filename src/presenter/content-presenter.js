@@ -18,7 +18,6 @@ export default class ContentPresenter {
     this.movieModel = movieModel;
     this.newMovies = [...this.movieModel.getMovies()];
 
-
     render(new MovieListView(this.newMovies), siteMainNode);
     const getFilmCard = () => getFilmList().querySelector('.films-list__container');
 
