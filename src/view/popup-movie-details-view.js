@@ -1,8 +1,9 @@
 import {createElement} from '../render.js';
+import {humanizeFilmDueDate} from '../util.js';
 
 const createNewFilmDetailsTemplate = (movie) => {
   const {title, alternativeTitle, genre, director, description, totalRating, poster, runtime, age, writers, actors} = movie.filmInfo;
-  const {releaseCountry} = movie.filmInfo.release;
+  const {releaseCountry, date} = movie.filmInfo.release;
 
   return (
     `<section class="film-details">
@@ -45,7 +46,7 @@ const createNewFilmDetailsTemplate = (movie) => {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Release Date</td>
-                  <td class="film-details__cell">30 March 1945</td>
+                  <td class="film-details__cell">${humanizeFilmDueDate(date)}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>

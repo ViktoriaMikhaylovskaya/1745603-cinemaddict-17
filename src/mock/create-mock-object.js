@@ -16,7 +16,7 @@ export const createMockObject = () => ({
     age: getRandomItem(ageRating),
 
     release: {
-      // date: '2019-05-11T00:00:00.000Z',
+      date: '2019-05-16T00:00:00.000Z',
       releaseCountry: getRandomItem(releaseCountry)
     },
     runtime: getTimeFromMins(runtime),

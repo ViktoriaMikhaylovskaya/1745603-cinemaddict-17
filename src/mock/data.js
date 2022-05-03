@@ -1,3 +1,4 @@
+const EMOTION = ['smil', 'sleeping', 'puke', 'angry'];
 const title = ['The Great Flamarion', 'The Dance of Life', 'Sagebrush Trail', 'The Man with the Golden Arm'];
 const alternativeTitle = ['The Great Flamarion', 'Быстрее ветра', 'Побеждают хитрые', 'Что-то с чем-то'];
 const director = ['Anthony Mann', 'Tom Ford'];
@@ -15,7 +16,5 @@ const poster = ['made-for-each-other.png', 'popeye-meets-sinbad.png', 'sagebrush
 const runtime = 78;
 const ageRating = ['0', '12+', '18+'];
 
-// date: '2019-05-11T00:00:00.000Z', - 30 March 1945
 
-
-export {title, alternativeTitle, director, writers, actors, releaseCountry, genre, description, poster, runtime, ageRating};
+export {EMOTION, title, alternativeTitle, director, writers, actors, releaseCountry, genre, description, poster, runtime, ageRating};
