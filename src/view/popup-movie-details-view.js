@@ -2,6 +2,7 @@ import {createElement} from '../render.js';
 import {humanizeFilmDueDate} from '../util.js';
 import {createMockComment} from '../mock/create-mock-comment';
 
+
 const createNewFilmDetailsTemplate = (movie) => {
   const {title, alternativeTitle, genre, director, description, totalRating, poster, runtime, age, writers, actors} = movie.filmInfo;
   const {releaseCountry, date} = movie.filmInfo.release;
@@ -171,6 +172,7 @@ const createNewFilmDetailsTemplate = (movie) => {
       </section>`
   );
 };
+
 
 export default class PopupView {
   constructor(movie) {

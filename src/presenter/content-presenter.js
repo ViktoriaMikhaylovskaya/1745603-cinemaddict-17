@@ -1,15 +1,16 @@
 import MovieListView from '../view/movie-list-view';
 import MovieCardView from '../view/film-card-view';
-import ButtonShowMoreView from '../view/button-show-more-view.js';
+import ButtonShowMoreView from '../view/button-show-more-view';
 import TopFilmsView from '../view/top-films-list-view';
 import MostCommentedFilmsView from '../view/most-commented-films-view';
-import PopupView from '../view/popup-movie-details-view.js';
-import {render} from '../render.js';
+import PopupView from '../view/popup-movie-details-view';
+import {render} from '../render';
 
 const siteBodyNode = document.querySelector('body');
 const siteMainNode = document.querySelector('.main');
 const getFilmSection = () => siteMainNode.querySelector('.films');
 const getFilmList = () => getFilmSection().querySelector('.films-list');
+const getFilmCard = () => getFilmList().querySelector('.films-list__container');
 
 
 export default class ContentPresenter {
@@ -19,7 +20,6 @@ export default class ContentPresenter {
     this.newMovies = [...this.movieModel.getMovies()];
 
     render(new MovieListView(this.newMovies), siteMainNode);
-    const getFilmCard = () => getFilmList().querySelector('.films-list__container');
 
     // Добавит фильмы в список
     this.newMovies.forEach((el) => {
@@ -41,7 +41,7 @@ export default class ContentPresenter {
     render(new MostCommentedFilmsView(), getFilmSection());
     const mostCommentedFilmsNode = document.querySelector('.films-list__container--most-commented');
 
-    for (let i = 2; i < 4; i++) {
+    for (let i = 0; i < 2; i++) {
       render(new MovieCardView(this.newMovies[i]), mostCommentedFilmsNode);
     }
 

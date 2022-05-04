@@ -57,7 +57,3 @@ export function getTimeFromMins(mins) {
 export const humanizeFilmDueDate = (dueDate) => dayjs(dueDate).format('D MMMM YYYY');
 
 export const humanizeCommentDueDate = (dueDate) => dayjs(dueDate).format('YYYY/M/D h:mm');
-
-
-// const date = '2019-05-11T00:00:00.000Z';
-// console.log(humanizeCommDueDate(date));
