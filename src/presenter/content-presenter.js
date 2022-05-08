@@ -14,15 +14,17 @@ const getFilmCard = () => getFilmList().querySelector('.films-list__container');
 
 
 export default class ContentPresenter {
+  #movieModel = null;
+  #newMovies = [];
 
   init = (movieModel) => {
-    this.movieModel = movieModel;
-    this.newMovies = [...this.movieModel.getMovies()];
+    this.#movieModel = movieModel;
+    this.#newMovies = [...this.#movieModel.movies];
 
-    render(new MovieListView(this.newMovies), siteMainNode);
+    render(new MovieListView(this.#newMovies), siteMainNode);
 
     // Добавит фильмы в список
-    this.newMovies.forEach((el) => {
+    this.#newMovies.forEach((el) => {
       render(new MovieCardView(el), getFilmCard());
     });
 
@@ -34,7 +36,7 @@ export default class ContentPresenter {
     const topFilmsNode = document.querySelector('.films-list__container--top-films');
 
     for (let i = 0; i < 2; i++) {
-      render(new MovieCardView(this.newMovies[i]), topFilmsNode);
+      render(new MovieCardView(this.#newMovies[i]), topFilmsNode);
     }
 
     // Добавит наиблее комментируемые фильмы
@@ -42,11 +44,11 @@ export default class ContentPresenter {
     const mostCommentedFilmsNode = document.querySelector('.films-list__container--most-commented');
 
     for (let i = 0; i < 2; i++) {
-      render(new MovieCardView(this.newMovies[i]), mostCommentedFilmsNode);
+      render(new MovieCardView(this.#newMovies[i]), mostCommentedFilmsNode);
     }
 
     // Попап с подробной инф-ей о фильме
-    this.newMovies.forEach((el) => {
+    this.#newMovies.forEach((el) => {
       render(new PopupView(el), siteBodyNode);
     });
   };
