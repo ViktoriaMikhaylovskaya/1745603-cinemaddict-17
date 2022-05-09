@@ -5,7 +5,7 @@ export default class MovieModel {
   #movies = [];
 
   constructor() {
-    this.#movies = createMockArray(17);
+    this.#movies = createMockArray(5);
   }
 
   get movies () {
