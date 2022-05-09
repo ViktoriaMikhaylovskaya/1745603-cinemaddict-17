@@ -16,17 +16,13 @@ const getFilmCard = () => getFilmList().querySelector('.films-list__container');
 export default class ContentPresenter {
   #movieModel = null;
   #newMovies = [];
+  // #movieListView = new MovieListView();
 
   init = (movieModel) => {
     this.#movieModel = movieModel;
     this.#newMovies = [...this.#movieModel.movies];
 
     render(new MovieListView(this.#newMovies), siteMainNode);
-
-    // Добавит фильмы в список
-    this.#newMovies.forEach((el) => {
-      render(new MovieCardView(el), getFilmCard());
-    });
 
     // Добавит кнопку в конце списка фильмов
     render(new ButtonShowMoreView(), getFilmList());
@@ -47,11 +43,43 @@ export default class ContentPresenter {
       render(new MovieCardView(this.#newMovies[i]), mostCommentedFilmsNode);
     }
 
-    // Попап с подробной инф-ей о фильме
-    this.#newMovies.forEach((el) => {
-      render(new PopupView(el), siteBodyNode);
+    for (let i = 0; i < this.#newMovies.length; i++) {
+      this.#renderMovie(this.#newMovies[i]);
+    }
+  };
+
+  #renderMovie = (movie) => {
+    const movieComponent = new MovieCardView(movie);
+    const popupComponent = new PopupView(movie);
+
+    const onEscKeyDown = (evt) => {
+      if (evt.key === 'Escape' || evt.key === 'Esc') {
+        evt.preventDefault();
+        siteBodyNode.removeChild(popupComponent.element);
+        document.removeEventListener('keydown', onEscKeyDown);
+      }
+    };
+
+    const appendPopupToBody = () => {
+      render(popupComponent, siteBodyNode);
+
+      const closeButton = popupComponent.element.querySelector('.film-details__close-btn');
+
+      function closePopup () {
+        closeButton.removeEventListener('click', closePopup);
+        document.removeEventListener('keydown', onEscKeyDown);
+        siteBodyNode.removeChild(popupComponent.element);
+      }
+
+      closeButton.addEventListener('click', closePopup);
+
+    };
+
+    movieComponent.element.querySelector('.film-card__link').addEventListener('click', () => {
+      appendPopupToBody();
+      document.addEventListener('keydown', onEscKeyDown);
     });
+
+    render(movieComponent, getFilmCard());
   };
 }
-
-

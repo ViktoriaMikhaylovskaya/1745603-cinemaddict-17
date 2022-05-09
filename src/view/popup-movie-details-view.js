@@ -51,6 +51,7 @@ const renderComments = (list) => {
 
 
 const createNewFilmDetailsTemplate = (movie) => {
+  // console.log('проверка 2', movie.filmInfo);
   const {title, alternativeTitle, genre, director, description, totalRating, poster, runtime, age, writers, actors} = movie.filmInfo;
   const {releaseCountry, date} = movie.filmInfo.release;
 
