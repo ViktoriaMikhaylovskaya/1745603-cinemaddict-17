@@ -14,6 +14,7 @@ const getFilmList = () => getFilmSection().querySelector('.films-list');
 const getFilmCard = () => getFilmList().querySelector('.films-list__container');
 
 const FILM_COUNT_PER_STEP = 5;
+const MAX_COUNT_FILMS_IN_LIST = 2;
 
 export default class ContentPresenter {
   #movieModel = null;
@@ -101,14 +102,14 @@ export default class ContentPresenter {
       // Добавит популярные фильмы
       render(new TopFilmsView(), getFilmSection());
       const topFilmsNode = document.querySelector('.films-list__container--top-films');
-      for (let i = 0; i < 2; i++) {
+      for (let i = 0; i < MAX_COUNT_FILMS_IN_LIST; i++) {
         render(new MovieCardView(this.#movies[i]), topFilmsNode);
       }
 
       // Добавит наиблее комментируемые фильмы
       render(new MostCommentedFilmsView(), getFilmSection());
       const mostCommentedFilmsNode = document.querySelector('.films-list__container--most-commented');
-      for (let i = 0; i < 2; i++) {
+      for (let i = 0; i < MAX_COUNT_FILMS_IN_LIST; i++) {
         render(new MovieCardView(this.#movies[i]), mostCommentedFilmsNode);
       }
     }
