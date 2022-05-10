@@ -17,56 +17,28 @@ const FILM_COUNT_PER_STEP = 5;
 
 export default class ContentPresenter {
   #movieModel = null;
-  #newMovies = [];
+  #movies = [];
   #showMoreButtonComponent = new ButtonShowMoreView();
   #renderedFilmCount = FILM_COUNT_PER_STEP;
 
-  init = (movieModel) => {
+  constructor(movieModel) {
     this.#movieModel = movieModel;
-    this.#newMovies = [...this.#movieModel.movies];
+  }
 
-    render(new MovieListView(this.#newMovies), siteMainNode);
-
-    if(this.#newMovies.length === 0) {
-      render(new NoFilmView(), getFilmList());
-    } else {
-
-      for (let i = 0; i < Math.min(this.#newMovies.length, FILM_COUNT_PER_STEP); i++) {
-        this.#renderMovie(this.#newMovies[i]);
-      }
-
-      // Добавит кнопку в конце списка фильмов
-      if(this.#newMovies.length > FILM_COUNT_PER_STEP) {
-        render(this.#showMoreButtonComponent, getFilmList());
-
-        this.#showMoreButtonComponent.element.addEventListener('click', this.#handleShowMoreButtonClick);
-      }
-
-      // Добавит популярные фильмы
-      render(new TopFilmsView(), getFilmSection());
-      const topFilmsNode = document.querySelector('.films-list__container--top-films');
-      for (let i = 0; i < 2; i++) {
-        render(new MovieCardView(this.#newMovies[i]), topFilmsNode);
-      }
-
-      // Добавит наиблее комментируемые фильмы
-      render(new MostCommentedFilmsView(), getFilmSection());
-      const mostCommentedFilmsNode = document.querySelector('.films-list__container--most-commented');
-      for (let i = 0; i < 2; i++) {
-        render(new MovieCardView(this.#newMovies[i]), mostCommentedFilmsNode);
-      }
-    }
+  init = () => {
+    this.#movies = [...this.#movieModel.movies];
+    this.#renderBoard();
   };
 
   #handleShowMoreButtonClick = (evt) => {
     evt.preventDefault();
-    this.#newMovies
+    this.#movies
       .slice(this.#renderedFilmCount, this.#renderedFilmCount + FILM_COUNT_PER_STEP)
       .forEach((movie) => this.#renderMovie(movie));
 
     this.#renderedFilmCount += FILM_COUNT_PER_STEP;
 
-    if (this.#renderedFilmCount >= this.#newMovies.length) {
+    if (this.#renderedFilmCount >= this.#movies.length) {
       this.#showMoreButtonComponent.element.remove();
       this.#showMoreButtonComponent.removeElement();
     }
@@ -106,5 +78,39 @@ export default class ContentPresenter {
     });
 
     render(movieComponent, getFilmCard());
+  };
+
+  #renderBoard = () => {
+    render(new MovieListView(this.#movies), siteMainNode);
+
+    if(this.#movies.length === 0) {
+      render(new NoFilmView(), getFilmList());
+    } else {
+
+      for (let i = 0; i < Math.min(this.#movies.length, FILM_COUNT_PER_STEP); i++) {
+        this.#renderMovie(this.#movies[i]);
+      }
+
+      // Добавит кнопку в конце списка фильмов
+      if(this.#movies.length > FILM_COUNT_PER_STEP) {
+        render(this.#showMoreButtonComponent, getFilmList());
+
+        this.#showMoreButtonComponent.element.addEventListener('click', this.#handleShowMoreButtonClick);
+      }
+
+      // Добавит популярные фильмы
+      render(new TopFilmsView(), getFilmSection());
+      const topFilmsNode = document.querySelector('.films-list__container--top-films');
+      for (let i = 0; i < 2; i++) {
+        render(new MovieCardView(this.#movies[i]), topFilmsNode);
+      }
+
+      // Добавит наиблее комментируемые фильмы
+      render(new MostCommentedFilmsView(), getFilmSection());
+      const mostCommentedFilmsNode = document.querySelector('.films-list__container--most-commented');
+      for (let i = 0; i < 2; i++) {
+        render(new MovieCardView(this.#movies[i]), mostCommentedFilmsNode);
+      }
+    }
   };
 }
