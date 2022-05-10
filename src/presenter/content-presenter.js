@@ -4,6 +4,7 @@ import ButtonShowMoreView from '../view/button-show-more-view';
 import TopFilmsView from '../view/top-films-list-view';
 import MostCommentedFilmsView from '../view/most-commented-films-view';
 import PopupView from '../view/popup-movie-details-view';
+import NoFilmView from '../view/no-film-view';
 import {render} from '../render';
 
 const siteBodyNode = document.querySelector('body');
@@ -26,30 +27,34 @@ export default class ContentPresenter {
 
     render(new MovieListView(this.#newMovies), siteMainNode);
 
-    // Добавит кнопку в конце списка фильмов
-    if(this.#newMovies.length > FILM_COUNT_PER_STEP) {
-      render(this.#showMoreButtonComponent, getFilmList());
+    if(this.#newMovies.length === 0) {
+      render(new NoFilmView(), getFilmList());
+    } else {
 
-      this.#showMoreButtonComponent.element.addEventListener('click', this.#handleShowMoreButtonClick);
-    }
+      for (let i = 0; i < Math.min(this.#newMovies.length, FILM_COUNT_PER_STEP); i++) {
+        this.#renderMovie(this.#newMovies[i]);
+      }
 
+      // Добавит кнопку в конце списка фильмов
+      if(this.#newMovies.length > FILM_COUNT_PER_STEP) {
+        render(this.#showMoreButtonComponent, getFilmList());
 
-    // Добавит популярные фильмы
-    render(new TopFilmsView(), getFilmSection());
-    const topFilmsNode = document.querySelector('.films-list__container--top-films');
-    for (let i = 0; i < 2; i++) {
-      render(new MovieCardView(this.#newMovies[i]), topFilmsNode);
-    }
+        this.#showMoreButtonComponent.element.addEventListener('click', this.#handleShowMoreButtonClick);
+      }
 
-    // Добавит наиблее комментируемые фильмы
-    render(new MostCommentedFilmsView(), getFilmSection());
-    const mostCommentedFilmsNode = document.querySelector('.films-list__container--most-commented');
-    for (let i = 0; i < 2; i++) {
-      render(new MovieCardView(this.#newMovies[i]), mostCommentedFilmsNode);
-    }
+      // Добавит популярные фильмы
+      render(new TopFilmsView(), getFilmSection());
+      const topFilmsNode = document.querySelector('.films-list__container--top-films');
+      for (let i = 0; i < 2; i++) {
+        render(new MovieCardView(this.#newMovies[i]), topFilmsNode);
+      }
 
-    for (let i = 0; i < Math.min(this.#newMovies.length, FILM_COUNT_PER_STEP); i++) {
-      this.#renderMovie(this.#newMovies[i]);
+      // Добавит наиблее комментируемые фильмы
+      render(new MostCommentedFilmsView(), getFilmSection());
+      const mostCommentedFilmsNode = document.querySelector('.films-list__container--most-commented');
+      for (let i = 0; i < 2; i++) {
+        render(new MovieCardView(this.#newMovies[i]), mostCommentedFilmsNode);
+      }
     }
   };
 
