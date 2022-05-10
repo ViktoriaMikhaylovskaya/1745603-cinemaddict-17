@@ -12,11 +12,13 @@ const getFilmSection = () => siteMainNode.querySelector('.films');
 const getFilmList = () => getFilmSection().querySelector('.films-list');
 const getFilmCard = () => getFilmList().querySelector('.films-list__container');
 
+const FILM_COUNT_PER_STEP = 5;
 
 export default class ContentPresenter {
   #movieModel = null;
   #newMovies = [];
-  // #movieListView = new MovieListView();
+  #showMoreButtonComponent = new ButtonShowMoreView();
+  #renderedFilmCount = FILM_COUNT_PER_STEP;
 
   init = (movieModel) => {
     this.#movieModel = movieModel;
@@ -25,12 +27,16 @@ export default class ContentPresenter {
     render(new MovieListView(this.#newMovies), siteMainNode);
 
     // Добавит кнопку в конце списка фильмов
-    render(new ButtonShowMoreView(), getFilmList());
+    if(this.#newMovies.length > FILM_COUNT_PER_STEP) {
+      render(this.#showMoreButtonComponent, getFilmList());
+
+      this.#showMoreButtonComponent.element.addEventListener('click', this.#handleShowMoreButtonClick);
+    }
+
 
     // Добавит популярные фильмы
     render(new TopFilmsView(), getFilmSection());
     const topFilmsNode = document.querySelector('.films-list__container--top-films');
-
     for (let i = 0; i < 2; i++) {
       render(new MovieCardView(this.#newMovies[i]), topFilmsNode);
     }
@@ -38,13 +44,26 @@ export default class ContentPresenter {
     // Добавит наиблее комментируемые фильмы
     render(new MostCommentedFilmsView(), getFilmSection());
     const mostCommentedFilmsNode = document.querySelector('.films-list__container--most-commented');
-
     for (let i = 0; i < 2; i++) {
       render(new MovieCardView(this.#newMovies[i]), mostCommentedFilmsNode);
     }
 
-    for (let i = 0; i < this.#newMovies.length; i++) {
+    for (let i = 0; i < Math.min(this.#newMovies.length, FILM_COUNT_PER_STEP); i++) {
       this.#renderMovie(this.#newMovies[i]);
+    }
+  };
+
+  #handleShowMoreButtonClick = (evt) => {
+    evt.preventDefault();
+    this.#newMovies
+      .slice(this.#renderedFilmCount, this.#renderedFilmCount + FILM_COUNT_PER_STEP)
+      .forEach((movie) => this.#renderMovie(movie));
+
+    this.#renderedFilmCount += FILM_COUNT_PER_STEP;
+
+    if (this.#renderedFilmCount >= this.#newMovies.length) {
+      this.#showMoreButtonComponent.element.remove();
+      this.#showMoreButtonComponent.removeElement();
     }
   };
 
@@ -52,6 +71,7 @@ export default class ContentPresenter {
     const movieComponent = new MovieCardView(movie);
     const popupComponent = new PopupView(movie);
 
+    // TODO: убрать утечку памяти при нажатии на Esc - удалять обработчик события клика на кнопку закрытия.
     const onEscKeyDown = (evt) => {
       if (evt.key === 'Escape' || evt.key === 'Esc') {
         evt.preventDefault();
