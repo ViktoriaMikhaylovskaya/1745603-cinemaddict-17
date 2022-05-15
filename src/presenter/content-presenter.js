@@ -31,8 +31,7 @@ export default class ContentPresenter {
     this.#renderBoard();
   };
 
-  #handleShowMoreButtonClick = (evt) => {
-    evt.preventDefault();
+  #handleShowMoreButtonClick = () => {
     this.#movies
       .slice(this.#renderedFilmCount, this.#renderedFilmCount + FILM_COUNT_PER_STEP)
       .forEach((movie) => this.#renderMovie(movie));
@@ -73,7 +72,7 @@ export default class ContentPresenter {
 
     };
 
-    movieComponent.element.querySelector('.film-card__link').addEventListener('click', () => {
+    movieComponent.setFilmClickHandler(() => {
       appendPopupToBody();
       document.addEventListener('keydown', onEscKeyDown);
     });
@@ -96,7 +95,7 @@ export default class ContentPresenter {
       if(this.#movies.length > FILM_COUNT_PER_STEP) {
         render(this.#showMoreButtonComponent, getFilmList());
 
-        this.#showMoreButtonComponent.element.addEventListener('click', this.#handleShowMoreButtonClick);
+        this.#showMoreButtonComponent.setClickHandler(this.#handleShowMoreButtonClick);
       }
 
       // Добавит популярные фильмы
