@@ -1,3 +1,4 @@
+import {render} from '../framework/render';
 import MovieListView from '../view/movie-list-view';
 import MovieCardView from '../view/film-card-view';
 import ButtonShowMoreView from '../view/button-show-more-view';
@@ -5,7 +6,6 @@ import TopFilmsView from '../view/top-films-list-view';
 import MostCommentedFilmsView from '../view/most-commented-films-view';
 import PopupView from '../view/popup-movie-details-view';
 import NoFilmView from '../view/no-film-view';
-import {render} from '../render';
 
 const siteBodyNode = document.querySelector('body');
 const siteMainNode = document.querySelector('.main');
