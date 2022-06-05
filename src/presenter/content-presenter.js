@@ -1,13 +1,13 @@
-import {render} from '../framework/render';
+import {render, remove} from '../framework/render';
 import MovieListView from '../view/movie-list-view';
 import MovieCardView from '../view/film-card-view';
 import ButtonShowMoreView from '../view/button-show-more-view';
 import TopFilmsView from '../view/top-films-list-view';
 import MostCommentedFilmsView from '../view/most-commented-films-view';
-import PopupView from '../view/popup-movie-details-view';
 import NoFilmView from '../view/no-film-view';
+import FilmPresenter from './film-presenter';
+import { updateItem } from '../util';
 
-const siteBodyNode = document.querySelector('body');
 const siteMainNode = document.querySelector('.main');
 const getFilmSection = () => siteMainNode.querySelector('.films');
 const getFilmList = () => getFilmSection().querySelector('.films-list');
@@ -21,6 +21,7 @@ export default class ContentPresenter {
   #movies = [];
   #showMoreButtonComponent = new ButtonShowMoreView();
   #renderedFilmCount = FILM_COUNT_PER_STEP;
+  #filmPresenter = new Map();
 
   constructor(movieModel) {
     this.#movieModel = movieModel;
@@ -44,40 +45,26 @@ export default class ContentPresenter {
     }
   };
 
+  #handleModeChange = () => {
+    this.#filmPresenter.forEach((presenter) => presenter.resetView());
+  };
+
+  #handleFilmChange = (updatedFilm) => {
+    this.#movies = updateItem(this.#movies, updatedFilm);
+    this.#filmPresenter.get(updatedFilm.id).init(updatedFilm);
+  };
+
   #renderMovie = (movie) => {
-    const movieComponent = new MovieCardView(movie);
-    const popupComponent = new PopupView(movie);
+    const filmPresenter = new FilmPresenter(getFilmCard(), this.#handleFilmChange, this.#handleModeChange);
+    filmPresenter.init(movie);
+    this.#filmPresenter.set(movie.id, filmPresenter);
+  };
 
-    // TODO: убрать утечку памяти при нажатии на Esc - удалять обработчик события клика на кнопку закрытия.
-    const onEscKeyDown = (evt) => {
-      if (evt.key === 'Escape' || evt.key === 'Esc') {
-        evt.preventDefault();
-        siteBodyNode.removeChild(popupComponent.element);
-        document.removeEventListener('keydown', onEscKeyDown);
-      }
-    };
-
-    const appendPopupToBody = () => {
-      render(popupComponent, siteBodyNode);
-
-      const closeButton = popupComponent.element.querySelector('.film-details__close-btn');
-
-      function closePopup () {
-        closeButton.removeEventListener('click', closePopup);
-        document.removeEventListener('keydown', onEscKeyDown);
-        siteBodyNode.removeChild(popupComponent.element);
-      }
-
-      closeButton.addEventListener('click', closePopup);
-
-    };
-
-    movieComponent.setFilmClickHandler(() => {
-      appendPopupToBody();
-      document.addEventListener('keydown', onEscKeyDown);
-    });
-
-    render(movieComponent, getFilmCard());
+  #clearFilmList = () => {
+    this.#filmPresenter.forEach((presenter) => presenter.destroy());
+    this.#filmPresenter.clear();
+    this.#renderedFilmCount = FILM_COUNT_PER_STEP;
+    remove(this.#showMoreButtonComponent);
   };
 
   #renderBoard = () => {
