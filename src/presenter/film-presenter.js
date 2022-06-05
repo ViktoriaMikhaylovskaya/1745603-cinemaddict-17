@@ -1,4 +1,4 @@
-import {render, replace} from '../framework/render';
+import {render, replace, remove} from '../framework/render';
 import MovieCardView from '../view/film-card-view';
 import PopupView from '../view/popup-movie-details-view';
 
@@ -28,12 +28,15 @@ export default class FilmPresenter {
 
     this.cleanUp = () => {
       const root = this.#popupComponent.element;
-      const closeButton = root.querySelector('.film-details__close-btn');
       const onEscKeyDown = this.#onEscKeyDown;
+      const closeButton = root.querySelector('.film-details__close-btn');
+      const closeOverlayNode = root.querySelector('.films-details__shadow');
 
       closeButton.removeEventListener('click', this.cleanUp);
+      closeOverlayNode.removeEventListener('click', this.cleanUp);
       document.removeEventListener('keydown', onEscKeyDown);
       siteBodyNode.removeChild(root);
+      document.body.classList.remove('hide-overflow');
       this.#mode = Mode.DEFAULT;
     };
   }
@@ -65,6 +68,11 @@ export default class FilmPresenter {
     }
   };
 
+  destroy = () => {
+    remove(this.#movieComponent);
+    remove(this.#popupComponent);
+  };
+
   resetView = () => {
     if (this.#mode !== Mode.DEFAULT) {
       this.#appendPopupToBody();
@@ -76,16 +84,20 @@ export default class FilmPresenter {
       evt.preventDefault();
       siteBodyNode.removeChild(this.#popupComponent.element);
       document.removeEventListener('keydown', this.#onEscKeyDown);
+      document.body.classList.remove('hide-overflow');
     }
   };
 
   #appendPopupToBody = () => {
     render(this.#popupComponent, siteBodyNode);
+    document.body.classList.add('hide-overflow');
 
     const root = this.#popupComponent.element;
-    const closeButton = root.querySelector('.film-details__close-btn');
+    const closeButtonNode = root.querySelector('.film-details__close-btn');
+    const closeOverlayNode = root.querySelector('.films-details__shadow');
 
-    closeButton.addEventListener('click', this.cleanUp);
+    closeButtonNode.addEventListener('click', this.cleanUp);
+    closeOverlayNode.addEventListener('click', this.cleanUp);
 
     this.#changeMode();
     this.#mode = Mode.EDITING;

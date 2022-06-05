@@ -1,4 +1,5 @@
 import {render, remove} from '../framework/render';
+import SortView from '../view/list-sort-view';
 import MovieListView from '../view/movie-list-view';
 import MovieCardView from '../view/film-card-view';
 import ButtonShowMoreView from '../view/button-show-more-view';
@@ -6,7 +7,8 @@ import TopFilmsView from '../view/top-films-list-view';
 import MostCommentedFilmsView from '../view/most-commented-films-view';
 import NoFilmView from '../view/no-film-view';
 import FilmPresenter from './film-presenter';
-import { updateItem } from '../util';
+import {updateItem} from '../util';
+import {SortType} from '../view/list-sort-view';
 
 const siteMainNode = document.querySelector('.main');
 const getFilmSection = () => siteMainNode.querySelector('.films');
@@ -20,8 +22,11 @@ export default class ContentPresenter {
   #movieModel = null;
   #movies = [];
   #showMoreButtonComponent = new ButtonShowMoreView();
+  #currentSortType = SortType.DEFAULT;
+  #sortComponent = new SortView(this.#currentSortType);
   #renderedFilmCount = FILM_COUNT_PER_STEP;
   #filmPresenter = new Map();
+  #sourcedBoardTasks = [];
 
   constructor(movieModel) {
     this.#movieModel = movieModel;
@@ -29,6 +34,8 @@ export default class ContentPresenter {
 
   init = () => {
     this.#movies = [...this.#movieModel.movies];
+    this.#sourcedBoardTasks = [...this.#movieModel.movies];
+    this.#renderSort();
     this.#renderBoard();
   };
 
@@ -51,7 +58,39 @@ export default class ContentPresenter {
 
   #handleFilmChange = (updatedFilm) => {
     this.#movies = updateItem(this.#movies, updatedFilm);
+    this.#sourcedBoardTasks = updateItem(this.#sourcedBoardTasks, updatedFilm);
     this.#filmPresenter.get(updatedFilm.id).init(updatedFilm);
+  };
+
+  #sortFilms = (sortType) => {
+    switch (sortType) {
+      case SortType.SORT_BY_RATING:
+        this.#movies.sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating);
+        break;
+      case SortType.SORT_BY_DATE:
+        this.#movies.sort((a, b) => a.filmInfo.totalRating - b.filmInfo.totalRating);
+        break;
+      default:
+        this.#movies = [...this.#sourcedBoardTasks];
+    }
+
+    this.#currentSortType = sortType;
+  };
+
+  #handleSortTypeChange = (sortType) => {
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+
+    this.#sortFilms(sortType);
+    this.#clearFilmList();
+    this.#renderBoard();
+
+  };
+
+  #renderSort = () => {
+    render(this.#sortComponent, siteMainNode);
+    this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
   };
 
   #renderMovie = (movie) => {
