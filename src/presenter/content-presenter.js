@@ -26,7 +26,7 @@ export default class ContentPresenter {
   #sortComponent = new SortView(this.#currentSortType);
   #renderedFilmCount = FILM_COUNT_PER_STEP;
   #filmPresenter = new Map();
-  #sourcedBoardTasks = [];
+  #sourcedFilms = [];
 
   constructor(movieModel) {
     this.#movieModel = movieModel;
@@ -34,7 +34,7 @@ export default class ContentPresenter {
 
   init = () => {
     this.#movies = [...this.#movieModel.movies];
-    this.#sourcedBoardTasks = [...this.#movieModel.movies];
+    this.#sourcedFilms = [...this.#movieModel.movies];
     this.#renderSort();
     this.#renderBoard();
   };
@@ -58,7 +58,7 @@ export default class ContentPresenter {
 
   #handleFilmChange = (updatedFilm) => {
     this.#movies = updateItem(this.#movies, updatedFilm);
-    this.#sourcedBoardTasks = updateItem(this.#sourcedBoardTasks, updatedFilm);
+    this.#sourcedFilms = updateItem(this.#sourcedFilms, updatedFilm);
     this.#filmPresenter.get(updatedFilm.id).init(updatedFilm);
   };
 
@@ -71,7 +71,7 @@ export default class ContentPresenter {
         this.#movies.sort((a, b) => a.filmInfo.totalRating - b.filmInfo.totalRating);
         break;
       default:
-        this.#movies = [...this.#sourcedBoardTasks];
+        this.#movies = [...this.#sourcedFilms];
     }
 
     this.#currentSortType = sortType;

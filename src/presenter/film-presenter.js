@@ -2,6 +2,10 @@ import {render, replace, remove} from '../framework/render';
 import MovieCardView from '../view/film-card-view';
 import PopupView from '../view/popup-movie-details-view';
 
+import {humanizeFilmDueDate} from '../util.js';
+import {nanoid} from 'nanoid';
+import { dateComment} from '../mock/data';
+
 const siteBodyNode = document.querySelector('body');
 
 const Mode = {
@@ -37,7 +41,8 @@ export default class FilmPresenter {
       document.removeEventListener('keydown', onEscKeyDown);
       siteBodyNode.removeChild(root);
       document.body.classList.remove('hide-overflow');
-      this.#mode = Mode.DEFAULT;
+      // this.#popupComponent.reset(this.#movie);
+      // this.#mode = Mode.DEFAULT;
     };
   }
 
@@ -45,6 +50,7 @@ export default class FilmPresenter {
     this.#movie = movie;
 
     const prevFilmComponent = this.#movieComponent;
+    // const prevPopupComponent = this.#popupComponent;
 
     this.#movieComponent = new MovieCardView(movie);
     this.#popupComponent = new PopupView(movie);
@@ -62,9 +68,8 @@ export default class FilmPresenter {
     if (prevFilmComponent === null) {
       render(this.#movieComponent, this.#filmListContainer);
     } else {
-      if(this.#mode === Mode.DEFAULT)  {
-        replace(this.#movieComponent, prevFilmComponent);
-      }
+      replace(this.#movieComponent, prevFilmComponent);
+      this.#popupComponent.reset(this.#movie);
     }
   };
 
@@ -74,17 +79,32 @@ export default class FilmPresenter {
   };
 
   resetView = () => {
-    if (this.#mode !== Mode.DEFAULT) {
-      this.#appendPopupToBody();
-    }
+    this.#popupComponent.reset(this.#movie);
   };
 
   #onEscKeyDown = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
+      this.#popupComponent.reset(this.#movie);
       siteBodyNode.removeChild(this.#popupComponent.element);
       document.removeEventListener('keydown', this.#onEscKeyDown);
       document.body.classList.remove('hide-overflow');
+    }
+  };
+
+  #addCommenttoPopup = (evt) => {
+    if (evt.ctrlKey && evt.keyCode === 13) {
+      if(evt.target.value !== '') {
+        this.#movie.comments = [...this.#movie.comments,
+          {
+            id: nanoid(),
+            commenter: 'Ilya OReilly',
+            comment: evt.target.value,
+            dateComment: humanizeFilmDueDate(dateComment),
+            emotion: evt.target.value
+          }];
+        this.#changeData(this.#movie);
+      }
     }
   };
 
@@ -98,9 +118,10 @@ export default class FilmPresenter {
 
     closeButtonNode.addEventListener('click', this.cleanUp);
     closeOverlayNode.addEventListener('click', this.cleanUp);
+    document.addEventListener('keydown', this.#addCommenttoPopup);
 
     this.#changeMode();
-    this.#mode = Mode.EDITING;
+
   };
 
   #handleWatchListClick = () => {
@@ -117,4 +138,9 @@ export default class FilmPresenter {
     this.#movie.filmInfo.userDetails.favorite = !this.#movie.filmInfo.userDetails.favorite;
     this.#changeData(this.#movie);
   };
+
+  // #handleDeleteClick = () => {
+  //   const commentList = document.querySelector('.film-details__comments-list');
+  //   const comment = commentList.querySelector('.film-details__comment');
+  // };
 }
