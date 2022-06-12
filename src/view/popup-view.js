@@ -30,6 +30,8 @@ const FILM_CARD = {
 
 const getCheckedAttribute = (chooseEmotion, checkedEmotion) => chooseEmotion === checkedEmotion ? 'checked' : '';
 
+const showNewCommentEmoji = (newCommentEmoji) => newCommentEmoji ? `<img src="images/emoji/${newCommentEmoji}.png" width="70" height="70" alt="emoji-${newCommentEmoji}"></img>` : '';
+
 
 const createNewCommentTemplate = ({commenter, comment, dateComment, emotion}) => (
   `<li class="film-details__comment">
@@ -76,7 +78,7 @@ const createNewFilmDetailsTemplate = (movie) => {
   return (
     `<section class="film-details">
       <div class="films-details__shadow"></div>
-      <form class="film-details__inner" action="" method="get">
+      <form class="film-details__inner" action="" method="get" name="commentForm" onsubmit="return false;">
         <div class="film-details__top-container">
           <div class="film-details__close">
             <button class="film-details__close-btn" type="button">close</button>
@@ -152,8 +154,7 @@ const createNewFilmDetailsTemplate = (movie) => {
             </ul>
 
             <div class="film-details__new-comment">
-              <div class="film-details__add-emoji-label">
-              </div>
+              <div class="film-details__add-emoji-label">${showNewCommentEmoji(movie.chooseEmotion)}</div>
 
               <label class="film-details__comment-label">
                 <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${movie.typedComment}</textarea>
@@ -191,9 +192,13 @@ const createNewFilmDetailsTemplate = (movie) => {
 
 export default class PopupView extends AbstractStatefulView  {
   #movie = null;
+  #onClose = () => null;
+  #onEscKeyDown = () => null;
+  #onSubmit = () => null;
 
-  constructor(movie = FILM_CARD) {
+  constructor({movie = FILM_CARD, onSubmit}) {
     super();
+    this.#onSubmit = onSubmit;
     this._state = PopupView.convertDataToState(movie);
     this.#setInnerHandlers();
   }
@@ -201,6 +206,37 @@ export default class PopupView extends AbstractStatefulView  {
   get template() {
     return createNewFilmDetailsTemplate(this._state);
   }
+
+  addEvents = (onClose) => {
+    document.removeEventListener('keydown', this.#onEscKeyDown);
+
+    const cleanUp = () => {
+      this.element.querySelector('.film-details__close-btn').removeEventListener('click', cleanUp);
+      this.element.querySelector('.films-details__shadow').removeEventListener('click', cleanUp);
+      document.removeEventListener('keydown', onEscKeyDown);
+      onClose(this.#movie);
+    };
+    this.element.querySelector('.film-details__close-btn').addEventListener('click', cleanUp);
+    this.element.querySelector('.films-details__shadow').addEventListener('click', cleanUp);
+
+    const that = this;
+
+    function onEscKeyDown (evt) {
+      if (evt.key === 'Escape' || evt.key === 'Esc') {
+        evt.preventDefault();
+        cleanUp();
+      } else if (evt.ctrlKey && evt.keyCode === 13) {
+        evt.preventDefault();
+        const {chooseEmotion, typedComment} = that._state;
+        that.#onSubmit({chooseEmotion, typedComment});
+      }
+    }
+
+    this.#onEscKeyDown = onEscKeyDown;
+
+    document.addEventListener('keydown', onEscKeyDown);
+  };
+
 
   reset = (movie) => {
     this.updateElement(PopupView.convertDataToState(movie));
@@ -254,22 +290,22 @@ export default class PopupView extends AbstractStatefulView  {
     return movie;
   };
 
-  // get scrollOffset() {return this.element.scrollTop;}
-  // set scrollOffset(value) {this.element.scrollTop = value;}
+  get scrollOffset() {return this.element.scrollTop;}
+  set scrollOffset(value) {this.element.scrollTop = value;}
 
-  // #getElementUpdated = (update) => {
-  //   const scrollOffset = this.scrollOffset;
-  //   this.updateElement(update);
-  //   this.scrollOffset = scrollOffset;
-  // };
+  #getElementUpdated = (update) => {
+    const scrollOffset = this.scrollOffset;
+    this.updateElement(update);
+    this.scrollOffset = scrollOffset;
+  };
 
   #emotionClickHandler = (evt) => {
-    const chooseEmotion = evt.target.value;
-    this._setState({...this._state, chooseEmotion});
-    // if(evt.target.matches('input[type=radio]')){
-    //   const chooseEmotion = evt.target.value;
-    //   this.#getElementUpdated({ ...this._state, chooseEmotion});
-    //   evt.stopPropagation();
-    // }
+    // const chooseEmotion = evt.target.value;
+    // this._setState({...this._state, chooseEmotion});
+    if(evt.target.matches('input[type=radio]')){
+      const chooseEmotion = evt.target.value;
+      this.#getElementUpdated({ ...this._state, chooseEmotion});
+      evt.stopPropagation();
+    }
   };
 }
