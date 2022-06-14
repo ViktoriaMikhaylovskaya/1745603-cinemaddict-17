@@ -16,7 +16,6 @@ const FILM_CARD = {
 };
 
 const createFilmCard = (movie) => {
-  // console.log(movie.id, movie.filmInfo.userDetails.favorite);
   const {title, genre, description, ageRating, totalRating, poster, runtime} = movie.filmInfo;
   const {watchlist, alreadyWatched, favorite} = movie.filmInfo.userDetails;
 

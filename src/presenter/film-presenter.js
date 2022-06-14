@@ -1,9 +1,5 @@
-import {render, replace} from '../framework/render';
+import {render, replace, remove} from '../framework/render';
 import MovieCardView from '../view/film-card-view';
-
-// import {humanizeFilmDueDate} from '../util.js';
-// import {nanoid} from 'nanoid';
-// import { dateComment} from '../mock/data';
 
 export default class FilmPresenter {
   #filmListContainer = null;
@@ -42,6 +38,8 @@ export default class FilmPresenter {
       replace(this.#movieComponent, prevFilmComponent);
     }
   };
+
+  destroy = () => remove(this.#movieComponent);
 
   #handleWatchListClick = () => {
     this.#movie.filmInfo.userDetails.watchlist = !this.#movie.filmInfo.userDetails.watchlist;

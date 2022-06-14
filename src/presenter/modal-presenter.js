@@ -37,11 +37,30 @@ export default class ModalPresenter {
         }
       }});
 
+    this.#popupComponent.setWatchlistClickHandler(this.#handleWatchListClick);
+    this.#popupComponent.setWatchedClickHandler(this.#handleWatchedClick);
+    this.#popupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
+
     if (prevPopupComponent === null) {
       render(this.#popupComponent, this.#root);
     } else {
       replace(this.#popupComponent, prevPopupComponent);
     }
     this.#popupComponent.addEvents(this.#closeModal);
+  };
+
+  #handleWatchListClick = () => {
+    this.#movie.filmInfo.userDetails.watchlist = !this.#movie.filmInfo.userDetails.watchlist;
+    this.#changeData(this.#movie);
+  };
+
+  #handleWatchedClick = () => {
+    this.#movie.filmInfo.userDetails.alreadyWatched = !this.#movie.filmInfo.userDetails.alreadyWatched;
+    this.#changeData(this.#movie);
+  };
+
+  #handleFavoriteClick = () => {
+    this.#movie.filmInfo.userDetails.favorite = !this.#movie.filmInfo.userDetails.favorite;
+    this.#changeData(this.#movie);
   };
 }
