@@ -37,6 +37,10 @@ export default class ContentPresenter {
     this.#movieModel = movieModel;
   }
 
+  get tasks() {
+    return this.#movieModel.movies;
+  }
+
   init = () => {
     this.#movies = [...this.#movieModel.movies];
     this.#sourcedFilms = [...this.#movieModel.movies];
