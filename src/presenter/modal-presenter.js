@@ -11,12 +11,14 @@ export default class ModalPresenter {
   #changeData = () => null;
   #closeModal = () => null;
   #commentsModel = null;
+  #handleModelEvent = null;
 
-  constructor({rootNode = document.body, closeModal, onChange, commentsModel} = {}) {
+  constructor({rootNode = document.body, closeModal, onChange, commentsModel, handleModelEvent} = {}) {
     this.#root = rootNode;
     this.#closeModal = closeModal;
     this.#changeData = onChange;
     this.#commentsModel = commentsModel;
+    this.#handleModelEvent = handleModelEvent;
 
     this.#commentsModel.addObserver(this.#handleModelEvent);
   }
@@ -67,38 +69,30 @@ export default class ModalPresenter {
     );
   };
 
-  #handleModelEvent = (event, payload) => {
-    switch (event) {
-      case UpdateType.PATCH:
-        this.init(payload);
-        break;
-      case UpdateType.MINOR:
-        this.init(payload);
-        break;
-    }
-  };
-
   #handleWatchListClick = () => {
     this.#movie.filmInfo.userDetails.watchlist = !this.#movie.filmInfo.userDetails.watchlist;
-    this.#changeData(this.#movie);
+    this.#changeData({
+      actionType: UserAction.UPDATE_MODAL,
+      event: UpdateType.PATCH,
+      payload: this.#movie
+    });
   };
 
   #handleWatchedClick = () => {
     this.#movie.filmInfo.userDetails.alreadyWatched = !this.#movie.filmInfo.userDetails.alreadyWatched;
-    this.#changeData(this.#movie);
+    this.#changeData({
+      actionType: UserAction.UPDATE_MODAL,
+      event: UpdateType.PATCH,
+      payload: this.#movie
+    });
   };
 
   #handleFavoriteClick = () => {
     this.#movie.filmInfo.userDetails.favorite = !this.#movie.filmInfo.userDetails.favorite;
-    this.#changeData(
-      UserAction.UPDATE_MODAL,
-      {
-        ...this.#movie,
-        userDetails: {
-          ...this.#movie.userDetails,
-          favorite: this.#movie.filmInfo.userDetails.favorite
-        }
-      }
-    );
+    this.#changeData({
+      actionType: UserAction.UPDATE_MODAL,
+      event: UpdateType.PATCH,
+      payload: this.#movie
+    });
   };
 }

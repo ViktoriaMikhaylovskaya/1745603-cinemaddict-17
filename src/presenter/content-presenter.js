@@ -11,6 +11,7 @@ import ModalPresenter from './modal-presenter';
 import {SortType} from '../view/list-sort-view';
 import {UpdateType, UserAction} from '../const.js';
 import CommentsModel from '../model/comments-model';
+import { filter } from '../const';
 
 const siteMainNode = document.querySelector('.main');
 const getFilmSection = () => siteMainNode.querySelector('.films');
@@ -25,6 +26,7 @@ export default class ContentPresenter {
   #isModalOpen = false;
   #currentSortType = SortType.DEFAULT;
   #renderedFilmCount = FILM_COUNT_PER_STEP;
+  #filterModel = null;
 
   #showMoreButtonComponent = new ButtonShowMoreView();
   #sortComponent = new SortView(this.#currentSortType);
@@ -35,20 +37,26 @@ export default class ContentPresenter {
 
   #filmPresenter = new Map();
 
-  constructor(movieModel) {
+  constructor(movieModel, filterModel) {
     this.#movieModel = movieModel;
+    this.#filterModel = filterModel;
 
     this.#movieModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get movies() {
+    const movies = this.#movieModel.movies;
+    const filterType = this.#filterModel.filter;
+    const filteredMovies = filter[filterType](movies);
+
     switch (this.#currentSortType) {
       case SortType.DEFAULT:
-        return [...this.#movieModel.movies];
+        return filteredMovies;
       case SortType.SORT_BY_RATING:
-        return [...this.#movieModel.movies].sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating);
+        return filteredMovies.sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating);
       case SortType.SORT_BY_DATE:
-        return [...this.#movieModel.movies].sort((a, b) => a.filmInfo.totalRating - b.filmInfo.totalRating);
+        return filteredMovies.sort((a, b) => a.filmInfo.totalRating - b.filmInfo.totalRating);
     }
 
     return this.#movieModel.movies;
@@ -72,6 +80,7 @@ export default class ContentPresenter {
     this.#modalPresenter = new ModalPresenter({
       closeModal: this.#closeModal,
       onChange: this.#handleViewAction,
+      handleModelEvent: this.#handleModelEvent,
       commentsModel: this.#commentsModel
     });
     this.#modalPresenter.init(movie);
@@ -104,36 +113,45 @@ export default class ContentPresenter {
     }
   };
 
-  #handleViewAction = (actionType, updateType, update) => {
+  #handleViewAction = ({actionType, event, payload}) => {
+    if(!event || !payload) {
+      throw new Error (`Недопустимо - ${event} , ${payload}`);
+    }
+
     switch (actionType) {
       case UserAction.UPDATE_CARD:
-        this.#movieModel.updateFilm(updateType, update);
+        this.#movieModel.updateFilm(event, payload);
         break;
       case UserAction.UPDATE_MODAL:
-        this.#movieModel.updateFilm(updateType, update);
-        this.#modalPresenter.init(update);
+        this.#movieModel.updateFilm(event, payload);
+        this.#modalPresenter.init(payload);
         break;
       case UserAction.ADD_COMMENT:
-        this.#commentsModel.addComment(updateType, update);
+        this.#commentsModel.addComment(event, payload);
         break;
       case UserAction.DELETE_COMMENT:
-        this.#commentsModel.deleteComment(updateType, update);
+        this.#commentsModel.deleteComment(event, payload);
         break;
+      default: {
+        throw new Error (`Недопустимый тип actionType - ${actionType}`);
+      }
     }
-    // Здесь будем вызывать обновление модели.
-    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
-    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
-    // update - обновленные данные
   };
 
   #handleModelEvent = (event, payload) => {
     switch (event) {
       case UpdateType.PATCH:
         this.#filmPresenter.get(payload.id).init(payload);
+        if (this.#isModalOpen) {
+          this.#modalPresenter.init(payload);
+        }
         break;
       case UpdateType.MINOR:
         this.#clearBoard();
         this.#renderBoard();
+        if (this.#isModalOpen) {
+          this.#modalPresenter.init(payload);
+        }
         break;
       case UpdateType.MAJOR:
         this.#clearBoard();
@@ -178,7 +196,7 @@ export default class ContentPresenter {
   };
 
   #renderMovieList =() => {
-    const movies = [...this.#movieModel.movies];
+    const movies = this.movies;
     const moviesCount = movies.length;
 
     render(new MovieListView(movies), siteMainNode);

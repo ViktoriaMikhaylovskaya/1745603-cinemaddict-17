@@ -43,47 +43,53 @@ export default class FilmPresenter {
   destroy = () => remove(this.#movieComponent);
 
   #handleWatchListClick = () => {
-    this.#movie.filmInfo.userDetails.watchlist = !this.#movie.filmInfo.userDetails.watchlist;
-    this.#changeData(
-      UserAction.UPDATE_CARD,
-      UpdateType.PATCH,
-      {
+    this.#changeData({
+      actionType: UserAction.UPDATE_CARD,
+      event: UpdateType.PATCH,
+      payload: {
         ...this.#movie,
-        userDetails: {
-          ...this.#movie.userDetails,
-          watchlist: this.#movie.filmInfo.userDetails.watchlist
-        }
+        filmInfo: {
+          ...this.#movie.filmInfo,
+          userDetails: {
+            ...this.#movie.userDetails,
+            watchlist: !this.#movie.filmInfo.userDetails.watchlist
+          }
+        },
       }
-    );
+    });
   };
 
   #handleWatchedClick = () => {
-    this.#movie.filmInfo.userDetails.alreadyWatched = !this.#movie.filmInfo.userDetails.alreadyWatched;
-    this.#changeData(
-      UserAction.UPDATE_CARD,
-      UpdateType.PATCH,
-      {
+    this.#changeData({
+      actionType: UserAction.UPDATE_CARD,
+      event: UpdateType.PATCH,
+      payload: {
         ...this.#movie,
-        userDetails: {
-          ...this.#movie.userDetails,
-          alreadyWatched: this.#movie.filmInfo.userDetails.alreadyWatched
-        }
+        filmInfo: {
+          ...this.#movie.filmInfo,
+          userDetails: {
+            ...this.#movie.userDetails,
+            alreadyWatched: !this.#movie.filmInfo.userDetails.alreadyWatched
+          }
+        },
       }
-    );
+    });
   };
 
   #handleFavoriteClick = () => {
-    this.#movie.filmInfo.userDetails.favorite = !this.#movie.filmInfo.userDetails.favorite;
-    this.#changeData(
-      UserAction.UPDATE_CARD,
-      UpdateType.PATCH,
-      {
+    this.#changeData({
+      actionType: UserAction.UPDATE_CARD,
+      event: UpdateType.PATCH,
+      payload: {
         ...this.#movie,
-        userDetails: {
-          ...this.#movie.userDetails,
-          favorite: this.#movie.filmInfo.userDetails.favorite
-        }
+        filmInfo: {
+          ...this.#movie.filmInfo,
+          userDetails: {
+            ...this.#movie.userDetails,
+            favorite: !this.#movie.filmInfo.userDetails.favorite
+          }
+        },
       }
-    );
+    });
   };
 }

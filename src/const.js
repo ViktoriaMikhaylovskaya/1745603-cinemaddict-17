@@ -1,10 +1,3 @@
-const FilterType = {
-  ALL: 'all',
-  WATCHLIST: 'watchlist',
-  HISTORY: 'history',
-  FAVORITES: 'favorites'
-};
-
 const UserAction = {
   UPDATE_CARD: 'UPDATE_CARD',
   UPDATE_MODAL: 'UPDATE_MODAL',
@@ -18,4 +11,18 @@ const UpdateType = {
   MAJOR: 'MAJOR',
 };
 
-export {UserAction, UpdateType, FilterType};
+const FilterType = {
+  ALL: 'All',
+  WATCHLIST: 'Watchlist',
+  HISTORY: 'History',
+  FAVORITES: 'Favorites'
+};
+
+const filter = {
+  [FilterType.ALL]: (movies) => movies,
+  [FilterType.WATCHLIST]: (movies) => movies.filter((el) => el.filmInfo.userDetails.watchlist),
+  [FilterType.HISTORY]: (movies) => movies.filter((el) => el.filmInfo.userDetails.alreadyWatched),
+  [FilterType.FAVORITES]: (movies) => movies.filter((el) => el.filmInfo.userDetails.favorite)
+};
+
+export {UserAction, UpdateType, filter, FilterType};
