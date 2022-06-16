@@ -1,4 +1,5 @@
 import {render, replace, remove} from '../framework/render';
+import {UserAction, UpdateType} from '../const.js';
 import MovieCardView from '../view/film-card-view';
 
 export default class FilmPresenter {
@@ -43,16 +44,46 @@ export default class FilmPresenter {
 
   #handleWatchListClick = () => {
     this.#movie.filmInfo.userDetails.watchlist = !this.#movie.filmInfo.userDetails.watchlist;
-    this.#changeData(this.#movie);
+    this.#changeData(
+      UserAction.UPDATE_CARD,
+      UpdateType.PATCH,
+      {
+        ...this.#movie,
+        userDetails: {
+          ...this.#movie.userDetails,
+          watchlist: this.#movie.filmInfo.userDetails.watchlist
+        }
+      }
+    );
   };
 
   #handleWatchedClick = () => {
     this.#movie.filmInfo.userDetails.alreadyWatched = !this.#movie.filmInfo.userDetails.alreadyWatched;
-    this.#changeData(this.#movie);
+    this.#changeData(
+      UserAction.UPDATE_CARD,
+      UpdateType.PATCH,
+      {
+        ...this.#movie,
+        userDetails: {
+          ...this.#movie.userDetails,
+          alreadyWatched: this.#movie.filmInfo.userDetails.alreadyWatched
+        }
+      }
+    );
   };
 
   #handleFavoriteClick = () => {
     this.#movie.filmInfo.userDetails.favorite = !this.#movie.filmInfo.userDetails.favorite;
-    this.#changeData(this.#movie);
+    this.#changeData(
+      UserAction.UPDATE_CARD,
+      UpdateType.PATCH,
+      {
+        ...this.#movie,
+        userDetails: {
+          ...this.#movie.userDetails,
+          favorite: this.#movie.filmInfo.userDetails.favorite
+        }
+      }
+    );
   };
 }

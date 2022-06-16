@@ -195,11 +195,13 @@ export default class PopupView extends AbstractStatefulView  {
   #onClose = () => null;
   #onEscKeyDown = () => null;
   #onSubmit = () => null;
+  #CommentsModel = null;
 
-  constructor({movie = FILM_CARD, onSubmit}) {
+  constructor({movie = FILM_CARD, onSubmit, handleModelEvent, commmentsModel}) {
     super();
     this.#onSubmit = onSubmit;
-    this._state = PopupView.convertDataToState(movie);
+    this._state = PopupView.convertDataToState(movie, handleModelEvent);
+    commmentsModel.addObserver(handleModelEvent);
     this.#setInnerHandlers();
   }
 
@@ -264,9 +266,26 @@ export default class PopupView extends AbstractStatefulView  {
 
   _restoreHandlers = () => {
     this.#setInnerHandlers();
+    this.setDeleteClickHandler(this._callback.deleteClick);
   };
 
-  static convertDataToState = (movie) => ({...movie, chooseEmotion:'', typedComment:''});
+  setDeleteClickHandler = (callback) => {
+    this._callback.deleteClick = callback;
+    const elements = this.element.querySelectorAll('.film-details__comment-delete');
+    elements.forEach((elem, index) => {elem.addEventListener('click', () => this._callback.deleteClick(index));});
+  };
+
+  #commentDeleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.deleteClick(PopupView.convertStateToData(this._state));
+  };
+
+  static convertDataToState = (movie, handleModelEvent) => ({
+    ...movie,
+    handleModelEvent,
+    chooseEmotion:'',
+    typedComment:''
+  });
 
   static convertStateToData = (state) => {
     const movie = {...state};
