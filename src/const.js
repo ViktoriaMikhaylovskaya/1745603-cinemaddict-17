@@ -25,4 +25,10 @@ const filter = {
   [FilterType.FAVORITES]: (movies) => movies.filter((el) => el.filmInfo.userDetails.favorite)
 };
 
-export {UserAction, UpdateType, filter, FilterType};
+const UserTitle = {
+  NOVICE: 'Novice',
+  FAN: 'Fan',
+  BUFF: 'Movie Buff'
+};
+
+export {UserAction, UpdateType, filter, FilterType, UserTitle};

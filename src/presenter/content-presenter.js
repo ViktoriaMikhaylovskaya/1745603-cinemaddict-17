@@ -1,4 +1,5 @@
 import {render, remove} from '../framework/render';
+import UserNameView from '../view/user-name-view';
 import SortView from '../view/list-sort-view';
 import MovieListView from '../view/movie-list-view';
 import MovieCardView from '../view/film-card-view';
@@ -10,10 +11,11 @@ import StatisticsView from '../view/statistics-view';
 import FilmPresenter from './film-presenter';
 import ModalPresenter from './modal-presenter';
 import {SortType} from '../view/list-sort-view';
-import {UpdateType, UserAction, filter} from '../const';
+import {UpdateType, UserAction, filter, FilterType} from '../const';
 import CommentsModel from '../model/comments-model';
 import {sortFilmsByDateDown} from '../util';
 
+const siteHeaderNode = document.querySelector('.header');
 const siteMainNode = document.querySelector('.main');
 const getFilmSection = () => siteMainNode.querySelector('.films');
 const getFilmList = () => getFilmSection().querySelector('.films-list');
@@ -29,6 +31,7 @@ export default class ContentPresenter {
   #currentSortType = SortType.DEFAULT;
   #renderedFilmCount = FILM_COUNT_PER_STEP;
   #filterModel = null;
+  #userTitleComponent = null;
 
   #showMoreButtonComponent = new ButtonShowMoreView();
   #sortComponent = new SortView(this.#currentSortType);
@@ -185,10 +188,24 @@ export default class ContentPresenter {
   };
 
   #renderBoard = () => {
+    this.#renderUserTitle();
     this.#renderMovieList();
     this.#renderTopFilms();
     this.#renderMostCommendetFilms();
     this.#renderStatisticsMovies();
+  };
+
+  #renderUserTitle = () => {
+    const movies = this.#movieModel.movies;
+    const watchedMoviesCount = filter[FilterType.HISTORY](movies).length;
+
+    this.#userTitleComponent = new UserNameView(watchedMoviesCount);
+
+    if (this.#userTitleComponent) {
+      remove(this.#userTitleComponent);
+    }
+
+    render(this.#userTitleComponent, siteHeaderNode);
   };
 
   #renderMovieList =() => {
