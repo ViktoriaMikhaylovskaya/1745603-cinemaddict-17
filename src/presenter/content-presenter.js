@@ -31,7 +31,7 @@ export default class ContentPresenter {
   #currentSortType = SortType.DEFAULT;
   #renderedFilmCount = FILM_COUNT_PER_STEP;
   #filterModel = null;
-  #userTitleComponent = null;
+  #userNameComponent = null;
 
   #showMoreButtonComponent = new ButtonShowMoreView();
   #sortComponent = new SortView(this.#currentSortType);
@@ -199,13 +199,13 @@ export default class ContentPresenter {
     const movies = this.#movieModel.movies;
     const watchedMoviesCount = filter[FilterType.HISTORY](movies).length;
 
-    this.#userTitleComponent = new UserNameView(watchedMoviesCount);
+    this.#userNameComponent = new UserNameView(watchedMoviesCount);
 
-    if (this.#userTitleComponent) {
-      remove(this.#userTitleComponent);
+    if (this.#userNameComponent) {
+      remove(this.#userNameComponent);
     }
 
-    render(this.#userTitleComponent, siteHeaderNode);
+    render(this.#userNameComponent, siteHeaderNode);
   };
 
   #renderMovieList =() => {
@@ -260,6 +260,7 @@ export default class ContentPresenter {
     this.#filmPresenter.forEach((presenter) => presenter.destroy());
     this.#filmPresenter.clear();
 
+    remove(this.#userNameComponent);
     remove(this.#topFilmsComponent);
     remove(this.#mostCommentedFilmsComponent);
     remove(this.#showMoreButtonComponent);
