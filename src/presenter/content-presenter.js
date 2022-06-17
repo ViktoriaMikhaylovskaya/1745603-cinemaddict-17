@@ -6,6 +6,7 @@ import ButtonShowMoreView from '../view/button-show-more-view';
 import TopFilmsView from '../view/top-films-list-view';
 import MostCommentedFilmsView from '../view/most-commented-films-view';
 import NoFilmView from '../view/no-film-view';
+import StatisticsView from '../view/statistics-view';
 import FilmPresenter from './film-presenter';
 import ModalPresenter from './modal-presenter';
 import {SortType} from '../view/list-sort-view';
@@ -17,6 +18,7 @@ const siteMainNode = document.querySelector('.main');
 const getFilmSection = () => siteMainNode.querySelector('.films');
 const getFilmList = () => getFilmSection().querySelector('.films-list');
 const getFilmCard = () => getFilmList().querySelector('.films-list__container');
+const siteFooterNode = document.querySelector('.footer__statistics');
 
 const FILM_COUNT_PER_STEP = 5;
 const MAX_COUNT_FILMS_IN_LIST = 2;
@@ -160,13 +162,6 @@ export default class ContentPresenter {
     }
   };
 
-  #handleFilmChange = (updatedFilm, data) => {
-    this.#filmPresenter.get(data.id).init(data);
-    if (this.#isModalOpen) {
-      this.#modalPresenter.init(updatedFilm);
-    }
-  };
-
   #handleSortTypeChange = (sortType) => {
     if (this.#currentSortType === sortType) {
       return;
@@ -193,6 +188,7 @@ export default class ContentPresenter {
     this.#renderMovieList();
     this.#renderTopFilms();
     this.#renderMostCommendetFilms();
+    this.#renderStatisticsMovies();
   };
 
   #renderMovieList =() => {
@@ -260,5 +256,9 @@ export default class ContentPresenter {
     if (resetSortType) {
       this.#currentSortType = SortType.DEFAULT;
     }
+  };
+
+  #renderStatisticsMovies = () => {
+    render(new StatisticsView(this.movies), siteFooterNode);
   };
 }
