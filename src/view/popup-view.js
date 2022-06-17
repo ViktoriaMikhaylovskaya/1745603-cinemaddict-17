@@ -59,7 +59,7 @@ const renderComments = (list) => {
 
 
 const createNewFilmDetailsTemplate = (movie) => {
-  const {title, alternativeTitle, genre, director, description, totalRating, poster, runtime, age, writers, actors} = movie.filmInfo;
+  const {title, alternativeTitle, genre, director, description, totalRating, poster, runtime, ageRating, writers, actors} = movie.filmInfo;
   const {releaseCountry, date} = movie.filmInfo.release;
   const {watchlist, alreadyWatched, favorite} = movie.filmInfo.userDetails;
 
@@ -87,7 +87,7 @@ const createNewFilmDetailsTemplate = (movie) => {
             <div class="film-details__poster">
               <img class="film-details__poster-img" src="./images/posters/${poster}" alt="">
 
-              <p class="film-details__age">${age}</p>
+              <p class="film-details__age">${ageRating}</p>
             </div>
 
             <div class="film-details__info">

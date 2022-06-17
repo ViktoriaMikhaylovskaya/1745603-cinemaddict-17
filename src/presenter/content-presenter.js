@@ -9,9 +9,9 @@ import NoFilmView from '../view/no-film-view';
 import FilmPresenter from './film-presenter';
 import ModalPresenter from './modal-presenter';
 import {SortType} from '../view/list-sort-view';
-import {UpdateType, UserAction} from '../const.js';
+import {UpdateType, UserAction, filter} from '../const';
 import CommentsModel from '../model/comments-model';
-import { filter } from '../const';
+import {sortFilmsByDateDown} from '../util';
 
 const siteMainNode = document.querySelector('.main');
 const getFilmSection = () => siteMainNode.querySelector('.films');
@@ -56,10 +56,10 @@ export default class ContentPresenter {
       case SortType.SORT_BY_RATING:
         return filteredMovies.sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating);
       case SortType.SORT_BY_DATE:
-        return filteredMovies.sort((a, b) => a.filmInfo.totalRating - b.filmInfo.totalRating);
+        return filteredMovies.sort(sortFilmsByDateDown);
     }
 
-    return this.#movieModel.movies;
+    return filteredMovies;
   }
 
   init = () => {
