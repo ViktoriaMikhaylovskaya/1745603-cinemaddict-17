@@ -1,5 +1,5 @@
 import AbstractStatefulView  from '../framework/view/abstract-stateful-view.js';
-import {humanizeFilmDueDate} from '../util.js';
+import {humanizeFilmDueDate} from '../utils.js';
 
 const FILM_CARD = {
   filmInfo: {
@@ -85,7 +85,7 @@ const createNewFilmDetailsTemplate = (movie) => {
           </div>
           <div class="film-details__info-wrap">
             <div class="film-details__poster">
-              <img class="film-details__poster-img" src="./images/posters/${poster}" alt="">
+              <img class="film-details__poster-img" src="./${poster}" alt="">
 
               <p class="film-details__age">${ageRating}</p>
             </div>

@@ -1,6 +1,6 @@
 import {render, replace} from '../framework/render';
 import PopupView from '../view/popup-view';
-import {humanizeFilmDueDate} from '../util.js';
+import {humanizeFilmDueDate} from '../utils.js';
 import {nanoid} from 'nanoid';
 import { UpdateType, UserAction } from '../const.js';
 

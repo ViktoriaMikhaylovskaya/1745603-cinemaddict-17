@@ -1,5 +1,4 @@
 import Observable from '../framework/observable.js';
-
 import {createMockComment} from '../mock/create-mock-comment.js';
 const MAX_COMMENTS_TOTAL = 100;
 
