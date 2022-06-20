@@ -42,12 +42,14 @@ export default class ContentPresenter {
   #commentsModel = null;
   #modalPresenter = null;
   #isLoading = true;
+  #moviesApiService = null;
 
   #filmPresenter = new Map();
 
-  constructor(movieModel, filterModel) {
+  constructor(movieModel, filterModel, moviesApiService) {
     this.#movieModel = movieModel;
     this.#filterModel = filterModel;
+    this.#moviesApiService = moviesApiService;
 
     this.#movieModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
@@ -84,15 +86,16 @@ export default class ContentPresenter {
 
   #openModal = (movie) => {
     this.#isModalOpen = true;
-    this.#commentsModel = new CommentsModel(movie);
+    this.#commentsModel = new CommentsModel(this.#moviesApiService);
     this.#modalPresenter = new ModalPresenter({
       closeModal: this.#closeModal,
       onChange: this.#handleViewAction,
       handleModelEvent: this.#handleModelEvent,
       commentsModel: this.#commentsModel
     });
-    this.#modalPresenter.init(movie);
+    this.#modalPresenter.init({movie, comments: []});
     document.body.classList.add('hide-overflow');
+    this.#commentsModel.init(movie);
   };
 
   #renderMovie = (movie) => {
@@ -169,6 +172,12 @@ export default class ContentPresenter {
         this.#isLoading = false;
         remove(this.#loadingComponent);
         this.#renderBoard();
+        break;
+      case UpdateType.INIT_COMMENTS:
+        this.#modalPresenter.init({
+          movie: payload,
+          comments: this.#commentsModel.comments
+        });
         break;
     }
   };

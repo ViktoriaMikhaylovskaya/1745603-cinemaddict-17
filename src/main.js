@@ -9,9 +9,11 @@ const END_POINT = 'https://17.ecmascript.pages.academy/cinemaddict';
 
 const siteMainNode = document.querySelector('.main');
 
-const movieModel = new MovieModel(new MoviesApiService(END_POINT, AUTHORIZATION));
+const moviesApiService = new MoviesApiService(END_POINT, AUTHORIZATION);
+
+const movieModel = new MovieModel(moviesApiService);
 const filterModel = new FilterModel();
-const contentPresenter = new ContentPresenter(movieModel, filterModel);
+const contentPresenter = new ContentPresenter(movieModel, filterModel, moviesApiService);
 const filterPresenter = new FilterPresenter(siteMainNode, filterModel, movieModel);
 
 filterPresenter.init();
