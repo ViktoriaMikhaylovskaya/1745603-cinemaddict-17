@@ -274,11 +274,6 @@ export default class PopupView extends AbstractStatefulView  {
     elements.forEach((elem, index) => {elem.addEventListener('click', () => this._callback.deleteClick(index));});
   };
 
-  #commentDeleteClickHandler = (evt) => {
-    evt.preventDefault();
-    this._callback.deleteClick(PopupView.convertStateToData(this._state));
-  };
-
   static convertDataToState = (movie, handleModelEvent) => ({
     ...movie,
     handleModelEvent,

@@ -1,7 +1,6 @@
 import {render, replace} from '../framework/render';
 import PopupView from '../view/popup-view';
 import {humanizeFilmDueDate} from '../utils.js';
-import {nanoid} from 'nanoid';
 import { UpdateType, UserAction } from '../const.js';
 
 export default class ModalPresenter {
@@ -25,7 +24,7 @@ export default class ModalPresenter {
 
   init = ({movie, comments}) => {
     if(!(typeof movie === 'object' && movie !== null && Array.isArray(comments))) {
-      throw new Error('');
+      throw new Error('Нет необходимого параметра');
     }
     this.#movie = {
       ...movie,
@@ -40,16 +39,17 @@ export default class ModalPresenter {
       movie: this.#movie,
       onSubmit: ({chooseEmotion, typedComment}) => {
         if(typeof chooseEmotion === 'string' && chooseEmotion !== '' && typeof typedComment === 'string' && typedComment !== '') {
-          this.#changeData(
-            UserAction.ADD_COMMENT,
-            UpdateType.MINOR,
-            {
-              id: nanoid(),
-              commenter: 'Ilya OReilly',
+          this.#changeData( {
+            actionType: UserAction.ADD_COMMENT,
+            event: UpdateType.MINOR,
+            payload: {
+              id: '',
+              author: 'Ilya OReilly',
               comment: typedComment,
-              dateComment: humanizeFilmDueDate(new Date ().toISOString()),
+              date: humanizeFilmDueDate(new Date ().toISOString()),
               emotion: chooseEmotion
             }
+          }
           );
         }
       }});
@@ -68,10 +68,11 @@ export default class ModalPresenter {
   };
 
   #handleDeleteClick = (comment) => {
-    this.#changeData(
-      UserAction.DELETE_COMMENT,
-      UpdateType.MINOR,
-      comment,
+    this.#changeData( {
+      actionType: UserAction.DELETE_COMMENT,
+      event: UpdateType.MINOR,
+      payload: comment
+    }
     );
   };
 

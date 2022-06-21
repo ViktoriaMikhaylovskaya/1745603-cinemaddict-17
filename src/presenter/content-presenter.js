@@ -135,7 +135,7 @@ export default class ContentPresenter {
         break;
       case UserAction.UPDATE_MODAL:
         this.#movieModel.updateFilm(event, payload);
-        this.#modalPresenter.init(payload);
+        this.#modalPresenter.init({movie: payload, comments: this.#commentsModel.comments});
         break;
       case UserAction.ADD_COMMENT:
         this.#commentsModel.addComment(event, payload);
@@ -154,14 +154,14 @@ export default class ContentPresenter {
       case UpdateType.PATCH:
         this.#filmPresenter.get(payload.id).init(payload);
         if (this.#isModalOpen) {
-          this.#modalPresenter.init(payload);
+          this.#modalPresenter.init({movie: payload, comments: this.#commentsModel.comments});
         }
         break;
       case UpdateType.MINOR:
         this.#clearBoard();
         this.#renderBoard();
         if (this.#isModalOpen) {
-          this.#modalPresenter.init(payload);
+          this.#modalPresenter.init({movie: payload, comments: this.#commentsModel.comments});
         }
         break;
       case UpdateType.MAJOR:
