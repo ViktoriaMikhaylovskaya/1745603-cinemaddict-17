@@ -11,6 +11,7 @@ export default class ModalPresenter {
   #closeModal = () => null;
   #commentsModel = null;
   #handleModelEvent = null;
+  #comments = null;
 
   constructor({rootNode = document.body, closeModal, onChange, commentsModel, handleModelEvent} = {}) {
     this.#root = rootNode;
@@ -23,13 +24,17 @@ export default class ModalPresenter {
   }
 
   init = ({movie, comments}) => {
+
     if(!(typeof movie === 'object' && movie !== null && Array.isArray(comments))) {
       throw new Error('Нет необходимого параметра');
     }
+
     this.#movie = {
       ...movie,
       comments: comments
     };
+
+    this.#comments = comments.map((element) => element.id);
 
     const prevPopupComponent = this.#popupComponent;
 
@@ -64,11 +69,12 @@ export default class ModalPresenter {
     } else {
       replace(this.#popupComponent, prevPopupComponent);
     }
+
     this.#popupComponent.addEvents(this.#closeModal);
   };
 
   #handleDeleteClick = (comment) => {
-    this.#changeData( {
+    this.#changeData({
       actionType: UserAction.DELETE_COMMENT,
       event: UpdateType.MINOR,
       payload: comment
@@ -81,7 +87,10 @@ export default class ModalPresenter {
     this.#changeData({
       actionType: UserAction.UPDATE_MODAL,
       event: UpdateType.PATCH,
-      payload: this.#movie
+      payload: {
+        ...this.#movie,
+        comments: this.#comments
+      }
     });
   };
 
@@ -90,7 +99,10 @@ export default class ModalPresenter {
     this.#changeData({
       actionType: UserAction.UPDATE_MODAL,
       event: UpdateType.PATCH,
-      payload: this.#movie
+      payload: {
+        ...this.#movie,
+        comments: this.#comments
+      }
     });
   };
 
@@ -99,7 +111,10 @@ export default class ModalPresenter {
     this.#changeData({
       actionType: UserAction.UPDATE_MODAL,
       event: UpdateType.PATCH,
-      payload: this.#movie
+      payload: {
+        ...this.#movie,
+        comments: this.#comments
+      }
     });
   };
 }
