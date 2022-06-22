@@ -46,7 +46,7 @@ export default class CommentsModel extends Observable {
       await this.#moviesApiService.deleteComment(commentID);
       this.#comments = this.#comments.filter(( _ , index) => index !== commentIndex);
 
-      this.#film.comments.pop();
+      this.#film.comments = this.#film.comments.filter(( _ , index) => index !== commentIndex);
 
       this._notify(updateType, this.#film);
     } catch(err) {
