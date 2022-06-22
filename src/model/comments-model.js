@@ -39,10 +39,19 @@ export default class CommentsModel extends Observable {
     }
   };
 
-  deleteComment = (updateType, commentID) => {
-    this.#comments = this.#comments.filter(( _ , index) => index !== commentID);
+  deleteComment = async (updateType, commentIndex) => {
+    const commentID = this.#comments[commentIndex].id;
 
-    this._notify(updateType, this.#film);
+    try {
+      await this.#moviesApiService.deleteComment(commentID);
+      this.#comments = this.#comments.filter(( _ , index) => index !== commentIndex);
+
+      this.#film.comments.pop();
+
+      this._notify(updateType, this.#film);
+    } catch(err) {
+      throw new Error(err);
+    }
   };
 
   #adaptToClient = (film,) => {

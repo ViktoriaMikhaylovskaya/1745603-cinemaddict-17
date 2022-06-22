@@ -46,6 +46,15 @@ export default class MoviesApiService extends ApiService {
     return parsedResponse;
   };
 
+  deleteComment = async (commentID) => {
+    const response = await this._load({
+      url: `comments/${commentID}`,
+      method: Method.DELETE,
+    });
+
+    return response;
+  };
+
   #adaptToServer = (film) => {
     const adaptedFilm = {
       ...film,
