@@ -43,7 +43,7 @@ export default class FilmPresenter {
   #handleWatchListClick = () => {
     this.#changeData({
       actionType: UserAction.UPDATE_CARD,
-      event: UpdateType.PATCH,
+      event: UpdateType.MINOR,
       payload: {
         ...this.#movie,
         filmInfo: {
@@ -60,7 +60,7 @@ export default class FilmPresenter {
   #handleWatchedClick = () => {
     this.#changeData({
       actionType: UserAction.UPDATE_CARD,
-      event: UpdateType.PATCH,
+      event: UpdateType.MINOR,
       payload: {
         ...this.#movie,
         filmInfo: {
@@ -77,7 +77,7 @@ export default class FilmPresenter {
   #handleFavoriteClick = () => {
     this.#changeData({
       actionType: UserAction.UPDATE_CARD,
-      event: UpdateType.PATCH,
+      event: UpdateType.MINOR,
       payload: {
         ...this.#movie,
         filmInfo: {

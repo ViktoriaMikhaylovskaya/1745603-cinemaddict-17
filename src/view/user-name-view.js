@@ -4,12 +4,12 @@ import {UserTitle} from '../const.js';
 const createNewUserNameTemplate = (watchedMovieCount) => {
   let userTitle = UserTitle.NOVICE;
 
-  if (watchedMovieCount > 10) {
+  if (watchedMovieCount > 20) {
+    userTitle = UserTitle.BUFF;
+  } else if (watchedMovieCount > 10) {
     userTitle = UserTitle.FAN;
-    if (watchedMovieCount > 20) {
-      userTitle = UserTitle.BUFF;
-    }
   }
+  // alert(`watchedMovieCount: ${watchedMovieCount}`);
 
   return  watchedMovieCount
     ? `<section class="header__profile profile">
