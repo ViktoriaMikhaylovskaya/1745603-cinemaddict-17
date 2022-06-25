@@ -161,22 +161,22 @@ const createNewFilmDetailsTemplate = (movie, isDisabled) => {
               </label>
 
               <div class="film-details__emoji-list">
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" ${isDisabled ? 'disabled' : ''} type="radio" id="emoji-smile" value="smile" ${getCheckedAttribute(movie.chooseEmotion, 'smile')}>
+                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile" ${getCheckedAttribute(movie.chooseEmotion, 'smile')}>
                 <label class="film-details__emoji-label" for="emoji-smile">
                   <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
                 </label>
 
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" ${isDisabled ? 'disabled' : ''} type="radio" id="emoji-sleeping" value="sleeping" ${getCheckedAttribute(movie.chooseEmotion, 'sleeping')}>
+                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping" ${getCheckedAttribute(movie.chooseEmotion, 'sleeping')}>
                 <label class="film-details__emoji-label" for="emoji-sleeping">
                   <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
                 </label>
 
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" ${isDisabled ? 'disabled' : ''} type="radio" id="emoji-puke" value="puke" ${getCheckedAttribute(movie.chooseEmotion, 'puke')}>
+                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke" ${getCheckedAttribute(movie.chooseEmotion, 'puke')}>
                 <label class="film-details__emoji-label" for="emoji-puke">
                   <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
                 </label>
 
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" ${isDisabled ? 'disabled' : ''} type="radio" id="emoji-angry" value="angry" ${getCheckedAttribute(movie.chooseEmotion, 'angry')}>
+                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry" ${getCheckedAttribute(movie.chooseEmotion, 'angry')}>
                 <label class="film-details__emoji-label" for="emoji-angry">
                   <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
                 </label>
@@ -204,6 +204,16 @@ export default class PopupView extends AbstractStatefulView {
   get scrollOffset() { return this.element.scrollTop; }
   set scrollOffset(value) { this.element.scrollTop = value; }
 
+  _restoreHandlers = () => {
+    this.#setInnerHandlers();
+    this.setDeleteClickHandler(this._callback.deleteClick);
+    this.setCloseButtonClickHandler(this._callback.closeClick);
+    this.setAddCommentKeyDownHandler(this._callback.addKeydown);
+    this.setWatchlistClickHandler(this._callback.watchlistClick);
+    this.setWatchedClickHandler(this._callback.watchedClick);
+    this.setFavoriteClickHandler(this._callback.favoriteClick);
+  };
+
   reset = (movie) => {
     this.updateElement(PopupView.convertDataToState(movie));
   };
@@ -226,40 +236,6 @@ export default class PopupView extends AbstractStatefulView {
         elem.disabled = true;
       });
     });
-  };
-
-  _restoreHandlers = () => {
-    this.#setInnerHandlers();
-    this.setDeleteClickHandler(this._callback.deleteClick);
-    this.setCloseButtonClickHandler(this._callback.closeClick);
-    this.setAddCommentKeyDownHandler(this._callback.addKeydown);
-    this.setWatchlistClickHandler(this._callback.watchlistClick);
-    this.setWatchedClickHandler(this._callback.watchedClick);
-    this.setFavoriteClickHandler(this._callback.favoriteClick);
-  };
-
-  #commentInputHandler = (evt) => {
-    const typedComment = evt.target.value;
-    this._setState({ ...this._state, typedComment });
-  };
-
-  #setInnerHandlers = () => {
-    this.element.querySelector('.film-details__emoji-list').addEventListener('click', this.#emotionClickHandler);
-    this.element.querySelector('textarea.film-details__comment-input').addEventListener('input', this.#commentInputHandler);
-  };
-
-  #getElementUpdated = (update) => {
-    const scrollOffset = this.scrollOffset;
-    this.updateElement(update);
-    this.scrollOffset = scrollOffset;
-  };
-
-  #emotionClickHandler = (evt) => {
-    if (evt.target.matches('input[type=radio]')) {
-      const chooseEmotion = evt.target.value;
-      this.#getElementUpdated({ ...this._state, chooseEmotion });
-      evt.stopPropagation();
-    }
   };
 
   setCloseButtonClickHandler = (callback) => {
@@ -285,6 +261,30 @@ export default class PopupView extends AbstractStatefulView {
   setFavoriteClickHandler = (callback) => {
     this._callback.favoriteClick = callback;
     this.element.querySelector('.film-details__control-button--favorite').addEventListener('click', this.#favoriteClickHandler);
+  };
+
+  #setInnerHandlers = () => {
+    this.element.querySelector('.film-details__emoji-list').addEventListener('click', this.#emotionClickHandler);
+    this.element.querySelector('textarea.film-details__comment-input').addEventListener('input', this.#commentInputHandler);
+  };
+
+  #getElementUpdated = (update) => {
+    const scrollOffset = this.scrollOffset;
+    this.updateElement(update);
+    this.scrollOffset = scrollOffset;
+  };
+
+  #commentInputHandler = (evt) => {
+    const typedComment = evt.target.value;
+    this._setState({ ...this._state, typedComment });
+  };
+
+  #emotionClickHandler = (evt) => {
+    if (evt.target.matches('input[type=radio]')) {
+      const chooseEmotion = evt.target.value;
+      this.#getElementUpdated({ ...this._state, chooseEmotion });
+      evt.stopPropagation();
+    }
   };
 
   #closePopupClickHandler = (evt) => {

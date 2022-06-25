@@ -9,7 +9,6 @@ const createNewUserNameTemplate = (watchedMovieCount) => {
   } else if (watchedMovieCount > 10) {
     userTitle = UserTitle.FAN;
   }
-  // alert(`watchedMovieCount: ${watchedMovieCount}`);
 
   return  watchedMovieCount
     ? `<section class="header__profile profile">
@@ -18,7 +17,6 @@ const createNewUserNameTemplate = (watchedMovieCount) => {
       </section>`
     : '';
 };
-
 
 export default class UserNameView extends AbstractView {
   #watchedMoviesCount = null;
