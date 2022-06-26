@@ -1,6 +1,6 @@
 import {render, replace, remove} from '../framework/render';
-import {UserAction, UpdateType} from '../const.js';
-import MovieCardView from '../view/film-card-view';
+import {UserAction, UpdateType} from '../const';
+import MovieCardView from '../view/movie-card-view';
 
 export default class FilmPresenter {
   #filmListContainer = null;
